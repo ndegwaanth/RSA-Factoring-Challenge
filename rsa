@@ -1,8 +1,12 @@
+#!/usr/bin/python3
 import sys
 import math
 
 
 def is_prime(num):
+    """ this function is based on retriving the prime numbers
+        args num: this is the value beign passed as argument
+    """
     if num < 2:
         return False
     for i in range(2, int(math.sqrt(num)) + 1):
@@ -12,6 +16,9 @@ def is_prime(num):
 
 
 def factor_rsa_number(n):
+    """ factor_rsa_number - this is used to print the two prime numbers
+        args n: this is the value beign passed on
+    """
     for p in range(2, n + 1):
         if n % p == 0 and is_prime(p) and is_prime(n // p):
             return p, n // p
@@ -20,19 +27,28 @@ def factor_rsa_number(n):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: rsa_factors <number>")
+        print("Usage: rsa_factors <file>")
         sys.exit(1)
 
-    n = int(sys.argv[1])
+    input_file = sys.argv[1]
 
-    if n <= 1:
-        print("Error: The input number must be greater than 1.")
-        sys.exit(1)
+    try:
+        with open(input_file, 'r') as file:
+            n = int(file.readline().strip())
 
-    factors = factor_rsa_number(n)
+        if n <= 1:
+            print("Error: The input number must be greater than 1.")
+            sys.exit(1)
 
-    if factors:
-        p, q = factors
-        print(f"p={p}, q={q}")
-    else:
-        print(f"Error: Could not factor {n} into two prime numbers.")
+        factors = factor_rsa_number(n)
+
+        if factors:
+            p, q = factors
+            result = p * q
+            print("{}={}*{}".format(result, q, p))
+        else:
+            print(f"Error: Could not factor {n} into two prime numbers.")
+    except FileNotFoundError:
+        print(f"Error: File '{input_file}' not found.")
+    except ValueError:
+        print("Error: Invalid number in the input file.")
