@@ -1,0 +1,38 @@
+import sys
+import math
+
+
+def is_prime(num):
+    if num < 2:
+        return False
+    for i in range(2, int(math.sqrt(num)) + 1):
+        if num % i == 0:
+            return False
+    return True
+
+
+def factor_rsa_number(n):
+    for p in range(2, n + 1):
+        if n % p == 0 and is_prime(p) and is_prime(n // p):
+            return p, n // p
+    return None
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: rsa_factors <number>")
+        sys.exit(1)
+
+    n = int(sys.argv[1])
+
+    if n <= 1:
+        print("Error: The input number must be greater than 1.")
+        sys.exit(1)
+
+    factors = factor_rsa_number(n)
+
+    if factors:
+        p, q = factors
+        print(f"p={p}, q={q}")
+    else:
+        print(f"Error: Could not factor {n} into two prime numbers.")
